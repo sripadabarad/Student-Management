@@ -1,0 +1,17 @@
+{
+  "name": "student-management",
+  "version": "1.0.0",
+  "description": "student management using node.js + Express + MongoDb backend Project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sripadabarad/Student-Management.git"
+  },
+  "author": "sripada barad",
+  "license": "MIT",
+  "keywords": ["node.js","express","mongodb","backend"]
+}
