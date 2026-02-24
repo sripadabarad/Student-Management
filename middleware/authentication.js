@@ -30,13 +30,13 @@ try {
 
 //now check the student is exist or not in the database
 
-const student = await Student.findById(decoded.id).select("-password");  // always hide sencitive data like : password
+const user = await Student.findById(decoded.id).select("-password");  // always hide sencitive data like : password
         
-    if(!student){
+    if(!user){
         throw new customError("Student not found",404)
     }
 
-    req.student = student ;
+    req.user = user ;
 
     next();
 });
