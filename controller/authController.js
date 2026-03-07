@@ -152,7 +152,7 @@ const refresh_Token = asyncHandler(async(req,res,next)=>{
 
  //if token expired then check the user from db by ID
 
-    const student = await Student.findById(decoded.id)
+    const student = await Student.findById(decoded.id);
     if(!student || !student.refreshToken){
         throw new customError("user not found or refreshtoken missing",404)
     }
@@ -161,13 +161,17 @@ const refresh_Token = asyncHandler(async(req,res,next)=>{
 
     const isMatch = await bcrypt.compare(refreshToken,student.refreshToken)
     if(!isMatch){
-        throw new customError("Refreshtoken mismatch",401)
+        
+        student.refreshToken = null; // DB se refresh token remove
+        await student.save();        // DB update
+
+        throw new customError("Session compromised. Please login again", 401);
     }
 
  //if the token match then create a newAccestoken
 
-    const newAccessToken = generateAccessToken({id:student._id,role:student.role});
-    const newRefreshToken = generateRefreshToken({id:student._id,role:student.role});
+    const newAccessToken = generateAccessToken(student);
+    const newRefreshToken = generateRefreshToken(student);
 
 // hash the refreshToken and save in DB
 
@@ -226,7 +230,7 @@ const refresh_Token = asyncHandler(async(req,res,next)=>{
         throw new customError("refreshToken not matched",400);
     }
      student.refreshToken = null;
-     
+
      await student.save({validateBeforeSave:false});
 
     res.clearCookie("refreshToken", {
@@ -432,4 +436,20 @@ const resetPassword = asyncHandler(async(req,res,next)=>{
     });
 });
 
-module.exports = { register, login , refresh_Token , logOut , changePassword , forgotPassword , resetPassword};
+
+const getAll = asyncHandler(async(req,res,next)=>{
+
+    const name = "sripada";
+    res.status(200).json({
+        success:true,
+        message:"data fetched",
+        data:{
+            name
+        }
+    });
+
+
+});
+
+
+module.exports = { register, login , refresh_Token , logOut , changePassword , forgotPassword , resetPassword,getAll};
