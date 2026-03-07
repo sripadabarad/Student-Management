@@ -9,7 +9,8 @@ const
  logOut ,
  changePassword ,
  forgotPassword ,
- resetPassword} = require("../controller/authController");
+ resetPassword,
+ getAll } = require("../controller/authController");
 
  // auth middleware for protected routes
 
@@ -41,6 +42,8 @@ const
 
  //resetpassword
  router.post("/reset-password",resetPassword);
+
+ router.get("/get" ,authentication ,getAll);
 
  module.exports = router;
 
