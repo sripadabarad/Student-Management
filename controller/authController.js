@@ -24,22 +24,18 @@ const register = asyncHandler(async (req, res, next) => {
     throw new customError("User already exists", 400);
   }
 
-  // Hash password before saving
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-
   // Create new student
   const newStudent = new Student({
     name,
     email,
-    password: hashedPassword,
+    password,
     role,
-    refreshToken:[]
+    refreshToken
   });
 
   // Generate tokens (Access + Refresh)
-  const accessToken = generateAccessToken({id:newStudent._id,role:newStudent.role});
-  const refreshToken = generateRefreshToken({id:newStudent._id,role:newStudent.role});
+  const accessToken = generateAccessToken(newStudent);
+  const refreshToken = generateRefreshToken(newStudent);
 
   // Hash refresh token and save in DB
   const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
@@ -94,13 +90,14 @@ const login = asyncHandler(async(req,res,next)=>{
     //compare the password 
     const isMatch = await bcrypt.compare(password,student.password);
     if(!isMatch){
-        throw new customError("invalida Password",401);
+        throw new customError("invalid Password",401);
     }
 
     //Gererate Token
 
-    const accessToken = generateAccessToken({id:student._id,role:student.role});
-    const refreshToken = generateRefreshToken({id:student._id,role:student.role});
+    const accessToken = generateAccessToken(student);
+    const refreshToken = generateRefreshToken(student);
+    
 
     //refreshToken hashed and save in db plain in cookie
 
@@ -204,37 +201,46 @@ const refresh_Token = asyncHandler(async(req,res,next)=>{
 
  const logOut = asyncHandler(async(req,res,next)=>{
 
-        // same check token from the cookie
-        const token = req.cookies.refreshToken;
+    const token = req.cookies.refreshToken;
 
-        if(!token){
-            throw new customError("No refreshtoken provided",401);
-        }
+    if(!token){
+        throw new customError("Refrehstoken not provided",400)
+    };
 
-        //now find the refreshToken from the database
-        
-        const student = await Student.findOne({refreshToken:token});
+    let decoded;
+    try {
+        decoded = jwt.verify(token,process.env.JWT_REFRESH_TOKEN);
+       
+    } catch (error) {
+        throw new customError("Token invalid or expired",402);
+    };
 
-        if(!student){
-            throw new customError("No token found",400);
-        }
+    const student = await Student.findById(decoded.id);
+    
+    if(!student){
+        throw new customError("student not found",400);
+    }
 
-        //clear refreshtoken for single device
+    const isMatch = await bcrypt.compare(token , student.refreshToken);
+    if(!isMatch){
+        throw new customError("refreshToken not matched",400);
+    }
+     student.refreshToken = null;
+     
+     await student.save({validateBeforeSave:false});
 
-        student.refreshToken = null;
-        await student.save();
-
-        res.clearCookie("refreshToken",{
-            httpOnly:true,
-            secure:process.env.NODE_ENV === "production",
-            sameSite:"Strict"
-        });
-
-        res.status(200).json({
-            success:true,
-            message:"student logged out successfully"
-        })
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "Strict",
     });
+
+    res.status(200).json({
+        success: true,
+        message: "Logout success",
+    });
+
+});
 
 //Change password
 
@@ -426,4 +432,4 @@ const resetPassword = asyncHandler(async(req,res,next)=>{
     });
 });
 
-module.exports = { register,login , refresh_Token , logOut , changePassword , forgotPassword , resetPassword};
+module.exports = { register, login , refresh_Token , logOut , changePassword , forgotPassword , resetPassword};
