@@ -1,6 +1,6 @@
 //import ValidationResult from express-validator 
 
-const validationResult = require("express-validator");
+const {validationResult} = require("express-validator");
 
 // middlware function to handle validation errors
 

@@ -19,14 +19,25 @@ const
  //now RABC for specific person 
  const authorization = require("../middleware/authorization.js");
 
+ // auth validation import and validation error catch middleware
+ 
+ const validateRequest = require("../middleware/validationRequest.js");
+ const {
+    registerValidator , 
+    loginValidator,
+    changePasswordValidator,
+    forgotPasswordValidator,
+    resetPasswordValidator
+} = require("../validator/authValidator.js");
+
 
  //NOW THE ROUTES END POINTS
  
  //Register
- router.post("/register",register);
+ router.post("/register", registerValidator , validateRequest ,register);
 
  //login
- router.post("/login",login);
+ router.post("/login",loginValidator,validateRequest,login);
 
  //refresh_Token
  router.post("/refresh-Token",refresh_Token);
@@ -35,13 +46,13 @@ const
  router.post("/logout",authentication,logOut);
 
  //changepassword
- router.post("/change-password",authentication ,changePassword);
+ router.post("/change-password",authentication,changePasswordValidator,validateRequest,changePassword);
 
  //forgotpassword
- router.post("/forgot-password",forgotPassword);
+ router.post("/forgot-password",forgotPasswordValidator,validateRequest,forgotPassword);
 
  //resetpassword
- router.post("/reset-password",resetPassword);
+ router.post("/reset-password/:resetToken",resetPasswordValidator,validateRequest,resetPassword);
 
  router.get("/get" ,authentication ,getAll);
 

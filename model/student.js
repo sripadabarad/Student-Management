@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");   // import mongoose for schema creation
 
+const crypto = require("crypto"); //use for hash the resetpassword token and reset the password
 const bcrypt = require("bcrypt");   //called bcrypt to hash the password for secure authentication
 
 //now create the user model design
@@ -55,6 +56,19 @@ studentSchema.pre("save", async function (next) {
 
 studentSchema.methods.comparePassword = async function (inputPasswod) {
     return await bcrypt.compare(inputPasswod , this.password);
+};
+
+//now use crypto for fortgot password 
+
+studentSchema.methods.createResetToken = function (){
+
+    const resetToken = crypto.randomBytes(30).toString("hex");
+
+    this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+
+    this.resetPasswordExpire = Date.now() + 10 * 60 *  1000 ;
+    
+    return resetToken ;
 };
 
 const Student = mongoose.model("Student",studentSchema);

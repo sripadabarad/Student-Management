@@ -29,8 +29,7 @@ const register = asyncHandler(async (req, res, next) => {
     name,
     email,
     password,
-    role,
-    refreshToken
+    role
   });
 
   // Generate tokens (Access + Refresh)
@@ -161,7 +160,7 @@ const refresh_Token = asyncHandler(async(req,res,next)=>{
 
     const isMatch = await bcrypt.compare(refreshToken,student.refreshToken)
     if(!isMatch){
-        
+
         student.refreshToken = null; // DB se refresh token remove
         await student.save();        // DB update
 
@@ -287,11 +286,7 @@ const isMatch = await bcrypt.compare(oldPassword,student.password);
 
 //if old password match then hash the new password and save in db and clear the refrreshtoken from db and cookie
 
-const salt = await bcrypt.genSalt(10);
-
-const hashedPassword = await bcrypt.hash(newPassword,salt);
-
-student.password = hashedPassword ;
+student.password = newPassword ;
 
 // logged out from all device
 
@@ -337,26 +332,29 @@ const forgotPassword = asyncHandler(async(req,res,next)=>{
 
     await student.save({validateBeforeSave:false});
 
-    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    console.log(resetLink);
+    
 
     //now call the sendmail
 
     try {
 
-        await sendEmail(
-            student.email,
-            "Reset Password",
-            `<p>
-            Click here to reset password:
-            <a href="${resetUrl}">Reset</a>
-            <br>
-            This links expires in 10 minutes
-            </p>`
-        );
+    //     await sendEmail({
+    //        to: student.email,
+    //        subject: "Reset Password",
+    //         html:`<p>
+    //         Click here to reset password:
+    //         <a href="${resetLink}">Reset</a>
+    //         <br>
+    //         This links expires in 10 minutes
+    //         </p>`
+    // });
 
         res.status(200).json({
             success:true,
-            message:"Email sent successfully"
+            message:"Email sent successfully",
+            resetLink
         });
 
     } catch (error) {
@@ -367,6 +365,7 @@ const forgotPassword = asyncHandler(async(req,res,next)=>{
         student.resetPasswordExpire = undefined;
 
         await student.save({validateBeforeSave:false});
+        console.log(resetLink);
         throw new customError("Email send failed",500)
     }
 
@@ -401,7 +400,7 @@ const resetPassword = asyncHandler(async(req,res,next)=>{
     const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
     //now find use and check the hash token with db sahed hash token
-    const student = await Studenttudent.findOne({
+    const student = await Student.findOne({
         resetPasswordToken:hashedToken,
         resetPasswordExpire:{$gt:Date.now()},
     });
@@ -412,12 +411,12 @@ const resetPassword = asyncHandler(async(req,res,next)=>{
 
     //user mil gaya hash the newPassword
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword,salt);
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(newPassword,salt);
 
     // save the hashed password in the database
 
-    student.password = hashedPassword;
+    student.password = newPassword;
 
     //clear resret token 
 
@@ -428,7 +427,7 @@ const resetPassword = asyncHandler(async(req,res,next)=>{
 
     student.refreshToken = null;
 
-    await student.save({validateBeforeSave:false});
+    await student.save();
 
     res.status(200).json({
         success:true,
