@@ -40,7 +40,7 @@ const
  router.post("/login",loginValidator,validateRequest,login);
 
  //refresh_Token
- router.post("/refresh-Token",refresh_Token);
+ router.post("/refresh-token",refresh_Token);
 
  //logout
  router.post("/logout",authentication,logOut);
