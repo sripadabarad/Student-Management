@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");   //called bcrypt to hash the password for sec
 
 //now create the user model design
 
-const studentSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name:{
         type:String,
         trim:true,
@@ -26,20 +26,21 @@ const studentSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        enum:["admin","teacher","student"],
-        default:"student"
+        enum:["admin","teacher","user"],
+        default:"user"
     },
     refreshToken:{
         type:String
     },
     resetPasswordToken:{type:String},
     resetPasswordExpire:{type:Date}
+    
 },{timestamps:true});
 
 
 //hash the password
 
-studentSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) {
     if(!this.isModified("password"))         // if password not change then call next and save this into  the database
         return next();
         
@@ -54,13 +55,13 @@ studentSchema.pre("save", async function (next) {
 
 // while login compare the plain password with the hashed password 
 
-studentSchema.methods.comparePassword = async function (inputPasswod) {
+userSchema.methods.comparePassword = async function (inputPasswod) {
     return await bcrypt.compare(inputPasswod , this.password);
 };
 
 //now use crypto for fortgot password 
 
-studentSchema.methods.createResetToken = function (){
+userSchema.methods.createResetToken = function (){
 
     const resetToken = crypto.randomBytes(30).toString("hex");
 
@@ -71,6 +72,6 @@ studentSchema.methods.createResetToken = function (){
     return resetToken ;
 };
 
-const Student = mongoose.model("Student",studentSchema);
+const User = mongoose.model("User",userSchema);
 
-module.exports = Student;
+module.exports = User;

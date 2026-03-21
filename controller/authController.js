@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const asyncHandler = require("../middleware/asyncHandler");
 const customError = require("../util/customError");
 const { generateAccessToken, generateRefreshToken } = require("../util/token");
-const Student = require("../model/student");
+const User = require("../model/authModel");
 const sendEmail = require("../util/sendMail");
 const crypto = require("crypto");  //for hash the token in reset token
 
@@ -19,13 +19,13 @@ const register = asyncHandler(async (req, res, next) => {
     }
 
     // Check if user already exists
-    const userExist = await Student.findOne({ email });
+    const userExist = await User.findOne({ email });
     if (userExist) {
         throw new customError("User already exists", 400);
     }
 
     // Create new student
-    const newStudent = new Student({
+    const newUser = new User({
         name,
         email,
         password,
@@ -33,16 +33,16 @@ const register = asyncHandler(async (req, res, next) => {
     });
 
     // Generate tokens (Access + Refresh)
-    const accessToken = generateAccessToken(newStudent);
-    const refreshToken = generateRefreshToken(newStudent);
+    const accessToken = generateAccessToken(newUser);
+    const refreshToken = generateRefreshToken(newUser);
 
     // Hash refresh token and save in DB
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
-    newStudent.refreshToken = hashedRefreshToken;
+    newUser.refreshToken = hashedRefreshToken;
 
     // Save user to DB (password + hashed refresh token)
-    await newStudent.save();
+    await newUser.save();
 
     // Set refresh token cookie for frontend
     res.cookie("refreshToken", refreshToken, {
@@ -57,10 +57,10 @@ const register = asyncHandler(async (req, res, next) => {
         success: true,
         message: "User registered successfully",
         userData: {
-            id: newStudent._id,
-            name: newStudent.name,
-            email: newStudent.email,
-            role: newStudent.role,
+            id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            role: newUser.role,
         },
         accessToken,
     });
@@ -81,30 +81,30 @@ const login = asyncHandler(async (req, res, next) => {
 
     // Find user
 
-    const student = await Student.findOne({ email }).select("+password");
-    if (!student) {
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
         throw new customError("Invalid Creadentials", 401);
     }
 
     //compare the password 
-    const isMatch = await bcrypt.compare(password, student.password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
         throw new customError("invalid Password", 401);
     }
 
     //Gererate Token
 
-    const accessToken = generateAccessToken(student);
-    const refreshToken = generateRefreshToken(student);
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
 
     //refreshToken hashed and save in db plain in cookie
 
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
-    student.refreshToken = hashedRefreshToken;
+    user.refreshToken = hashedRefreshToken;
 
-    await student.save();
+    await user.save();
 
     // plain refreshtoken set in cookie
     res.cookie("refreshToken", refreshToken, {
@@ -118,10 +118,10 @@ const login = asyncHandler(async (req, res, next) => {
         success: true,
         message: "User logged in successfully",
         userInfo: {
-            id: student._id,
-            name: student.name,
-            email: student.email,
-            role: student.role
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
         },
         accessToken
     });
@@ -151,33 +151,33 @@ const refresh_Token = asyncHandler(async (req, res, next) => {
 
     //if token expired then check the user from db by ID
 
-    const student = await Student.findById(decoded.id);
-    if (!student || !student.refreshToken) {
+    const user = await Student.findById(decoded.id);
+    if (!user || !user.refreshToken) {
         throw new customError("user not found or refreshtoken missing", 404)
     }
 
     //if got the token then compare 
 
-    const isMatch = await bcrypt.compare(refreshToken, student.refreshToken)
+    const isMatch = await bcrypt.compare(refreshToken, user.refreshToken)
     if (!isMatch) {
 
-        student.refreshToken = null; // DB se refresh token remove
-        await student.save();        // DB update
+        user.refreshToken = null; // DB se refresh token remove
+        await user.save();        // DB update
 
         throw new customError("Session compromised. Please login again", 401);
     }
 
     //if the token match then create a newAccestoken
 
-    const newAccessToken = generateAccessToken(student);
-    const newRefreshToken = generateRefreshToken(student);
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
 
     // hash the refreshToken and save in DB
 
     const hashedRefreshToken = await bcrypt.hash(newRefreshToken, 10);
 
-    student.refreshToken = hashedRefreshToken;
-    await student.save();
+    user.refreshToken = hashedRefreshToken;
+    await user.save();
 
     // now sent in the cookie
 
@@ -192,10 +192,10 @@ const refresh_Token = asyncHandler(async (req, res, next) => {
         success: true,
         message: "newAcess token generate successfully",
         userInfo: {
-            id: student._id,
-            name: student.name,
-            email: student.email,
-            role: student.role,
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
         },
         newAccessToken
     });
@@ -218,19 +218,19 @@ const logOut = asyncHandler(async (req, res, next) => {
         throw new customError("Token invalid or expired", 402);
     };
 
-    const student = await Student.findById(decoded.id);
+    const user = await User.findById(decoded.id);
 
-    if (!student) {
-        throw new customError("student not found", 400);
+    if (!user) {
+        throw new customError("user not found", 400);
     }
 
-    const isMatch = await bcrypt.compare(token, student.refreshToken);
+    const isMatch = await bcrypt.compare(token, user.refreshToken);
     if (!isMatch) {
         throw new customError("refreshToken not matched", 400);
     }
-    student.refreshToken = null;
+    user.refreshToken = null;
 
-    await student.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     res.clearCookie("refreshToken", {
         httpOnly: true,
@@ -240,7 +240,7 @@ const logOut = asyncHandler(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        message: "Logout success",
+        message: "User loggedout successfully",
     });
 
 });
@@ -271,27 +271,27 @@ const changePassword = asyncHandler(async (req, res, next) => {
 
     //check user login hai ya nai
 
-    const student = await Student.findById(userId).select("+password");
+    const user = await User.findById(userId).select("+password");
 
-    if (!student) {
+    if (!user) {
         throw new customError("user not found", 404);
     }
 
     // check the old password hashed password
 
-    const isMatch = await bcrypt.compare(oldPassword, student.password);
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isMatch) {
         throw new customError("oldPassword not match", 401);
     }
 
     //if old password match then hash the new password and save in db and clear the refrreshtoken from db and cookie
 
-    student.password = newPassword;
+    user.password = newPassword;
 
     // logged out from all device
 
-    student.refreshToken = null;
-    await student.save();
+    user.refreshToken = null;
+    await user.save();
 
     res.clearCookie("refreshToken", {
         httpOnly: true,
@@ -323,14 +323,14 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
     //user check  in databse
 
-    const student = await Student.findOne({ email });
-    if (!student) {
+    const user = await User.findOne({ email });
+    if (!user) {
         throw new customError("Student Not found", 404);
     };
 
-    const resetToken = student.createResetToken();
+    const resetToken = user.createResetToken();
 
-    await student.save({ validateBeforeSave: false });
+    await user.save({ validateBeforeSave: false });
 
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
@@ -340,13 +340,14 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
     try {
 
         await sendEmail({
-            to: student.email,
+            to: user.email,
             subject: "Reset Password",
             html: `
             <h2>Password Reset</h2>
             <a href="${resetLink}">Reset Password</a>
             <p>Click below to reset your password:</p>
-            <p>If you didn't request this, ignore this email.</p>`
+            <p>If you didn't request this, ignore this email.</p>`,
+            text:`sripada kumar`
         });
 
         res.status(200).json({
@@ -359,10 +360,10 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
 
         console.error(error.message);
 
-        student.resetPasswordToken = undefined;
-        student.resetPasswordExpire = undefined;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
 
-        await student.save({ validateBeforeSave: false });
+        await user.save({ validateBeforeSave: false });
         console.log(resetLink);
         throw new customError("Email send failed", 500)
     }
@@ -397,12 +398,12 @@ const resetPassword = asyncHandler(async (req, res, next) => {
     const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
 
     //now find use and check the hash token with db sahed hash token
-    const student = await Student.findOne({
+    const user = await User.findOne({
         resetPasswordToken: hashedToken,
         resetPasswordExpire: { $gt: Date.now() },
     });
 
-    if (!student) {
+    if (!user) {
         throw new customError("invalid token or expired", 400)
     };
 
@@ -413,18 +414,18 @@ const resetPassword = asyncHandler(async (req, res, next) => {
 
     // save the hashed password in the database
 
-    student.password = newPassword;
+    user.password = newPassword;
 
     //clear resret token 
 
-    student.resetPasswordToken = undefined;
-    student.resetPasswordExpire = undefined;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
 
     // Logout all device
 
-    student.refreshToken = null;
+    user.refreshToken = null;
 
-    await student.save();
+    await user.save();
 
     res.status(200).json({
         success: true,

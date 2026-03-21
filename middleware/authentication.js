@@ -1,4 +1,4 @@
-const Student = require("../model/student.js");
+const Student = require("../model/authModel.js");
 const asyncHandler = require("../middleware/asyncHandler.js");
 const jwt = require("jsonwebtoken");
 const customError = require("../util/customError.js");

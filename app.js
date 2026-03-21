@@ -12,7 +12,7 @@ app.use(cookieParser())
 
 
 //auth routes use
-app.use("/api/student",authRoutes);
+app.use("/api/auth",authRoutes);
 
 //global error handler (Last mein)
 app.use(errorHandler);
