@@ -31,7 +31,7 @@ const registerValidator =  [
 
     body("role")
     .optional()
-    .isIn(["admin" , "teacher" ,"student"])
+    .isIn(["admin" , "teacher" ,"user"])
     .withMessage("role must be admin , teacher or student")
 
 ]
