@@ -36,11 +36,25 @@ const  studentSchema = new mongoose.Schema({
         enum:["active","inactive"],
         default:"active",
     },
+    isDeleted:{
+        type:Boolean,
+        default:false
+    },
     createdBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"User",
         required:true,
     },
+    updatedBy:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        default:null,
+    },
+    deletedBy:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        default:null,
+    }
 },{
     timestamps:true
 });
