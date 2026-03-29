@@ -55,11 +55,18 @@ const getAllStudents = asyncHandler(async(req,res,next)=>{
     const page = Math.max(Number(req.query.page) || 1 , 1);
     const limit = Math.min(Number(req.query.limit) || 10, 50);
     const search = req.query.search?.trim() || "";
+    const isDeleted = req.query.isDeleted;
 
     const skip = (page - 1) * limit;
 
     // ✅ base query (soft delete)
-    const query = { isDeleted : false };    // we created query objects to add conditions for find
+    const query = {};    // we created query objects to add conditions for find
+
+        if(isDeleted!==undefined){
+            query.isDeleted = isDeleted === "true";
+        }else{
+            query.isDeleted = false ;
+        };
 
     // ✅ search if only value exists
     if(search){
