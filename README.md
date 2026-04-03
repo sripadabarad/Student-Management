@@ -1,4 +1,4 @@
-Student Management API :---
+# Student Management API 
 
 A backend project built with Node.js, Express, and MongoDB to manage student data with proper authentication and role-based access control.
 
@@ -6,7 +6,7 @@ This project focuses on writing clean, structured backend code and implementing 
 
 
 
-What this project does:----
+## What this project does:----
 1. Users can log in and get a JWT token
 2. Access to APIs is controlled using roles (admin, teacher, user)
 3. Students can be created, updated, fetched, and deleted
@@ -14,14 +14,14 @@ What this project does:----
 5. Supports pagination and search for handling large data
 
 
-Tech Stack :--
+## Tech Stack :--
 Backend: Node.js, Express.js
 Database: MongoDB (Mongoose)
 Security: JWT Authentication
 Architecture: MVC + Service Layer
 
 
-Project Structure :--
+## Project Structure :--
 The project follows a clean structure with separation of logic:
 Client → Routes → Controller → Service → Model → Database
 This helps keep the code maintainable and easy to extend.
@@ -32,20 +32,20 @@ Production-level code structure
 
 
 
-Authentication & Authorization :--
+## Authentication & Authorization :--
 
-Authentication:-
+### Authentication:-
 Authentication is handled using JWT.
 After login, a token is generated which must be sent in the request header.
 
-Authorization (RBAC):--
+### Authorization (RBAC):--
 Authorization is implemented using roles:--
 
 Admin --> Full access to student data (Create, Update, Delete, Read)
 Teacher --> Read + Create student
 User	 --> Read only 
 
-API Capabilities :--
+## API Capabilities :--
 
 Auth API Endpoints:--
 POST /api/auth/register
@@ -56,7 +56,7 @@ POST /api/auth/change-password
 POST /api/auth/forgot-password
 POST /api/auth/reset-password
 
-Student APIs :--
+## Student APIs :--
 
 GET /api/students/:id  Get single student 
 GET /api/students?isDeleted=false  → Get all active students
@@ -66,15 +66,15 @@ PATCH /api/students/:id    (for partial update)
 DELETE /api/students/:id  
 
 
-Pagination & Filtering :--
+##  Pagination & Filtering :--
 
-Pagination:
+### Pagination:
 GET /api/students?page=1&limit=10
 
-Search:
+### Search:
 GET /api/students?search=rahul
 
-Soft Delete :-
+### Soft Delete :-
 Instead of removing records permanently, the API uses a soft delete approach:
 isDeleted = true
 This helps prevent accidental data loss and is commonly used in production systems.
@@ -93,7 +93,7 @@ project-root/
 ├── server.js
 
 
-Environment Setup:--
+# Environment Setup:--
 PORT=5001
 MONGO_URI=your_mongodb_connection_string
 CLIENT_URL=your_frontend_url
@@ -106,35 +106,35 @@ EMAIL_FROM=your_email_address
 
 
 
-Run Locally :--
+ # Run Locally :--
 
 git clone https://github.com/sripadabarad/Student-Management.git
 cd Student-Management
 npm install
 npm start
 
-Testing :--
+# Testing :--
 
 All APIs are tested using Postman with proper authentication and role-based access control.
 
-Status :--
+# Status :--
 
 Deployment in progress.
 
 
-What Makes This Project Stand Out?
+# What Makes This Project Stand Out?
 1. Not just CRUD — includes real-world backend concepts
 2. Clean architecture used in production systems
 3. Proper separation of logic using service layer
 4. Secure authentication and role-based authorization
 5. Scalable design with pagination & filtering
 
-Author :-
+# Author :-
 
 sripada barad
 Backend Developer
 
-Note :--
+# Note :--
 
 This project reflects a strong understanding of backend fundamentals and real-world application design.
 It is built to demonstrate industry-ready development practices, not just basic functionality.
