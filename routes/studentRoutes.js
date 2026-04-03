@@ -75,4 +75,4 @@ router.get("/:id",
     authorization("admin","teacher","user"),
     getSingleStudent);
 
-module.exports  = router;
+module.exports = router;
