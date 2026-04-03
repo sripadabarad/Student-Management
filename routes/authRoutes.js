@@ -6,7 +6,7 @@ const
 { register, 
  login ,
  refresh_Token ,
- logOut ,
+ logOut,
  changePassword ,
  forgotPassword ,
  resetPassword,
