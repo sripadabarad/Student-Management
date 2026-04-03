@@ -88,7 +88,7 @@ project-root/
 ├── models/ 
 ├── routes/
 ├── services/
-├── util/ 
+├── utils/ 
 ├──app.js
 ├── server.js
 
