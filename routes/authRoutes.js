@@ -43,7 +43,7 @@ const
  router.post("/refresh-token",refresh_Token);
 
  //logout
- router.post("/logout",authentication,logOut);
+ router.post("/logout",logOut);
 
  //changepassword
  router.post("/change-password",authentication,changePasswordValidator,validateRequest,changePassword);
