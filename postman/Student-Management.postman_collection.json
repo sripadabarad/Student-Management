@@ -1,0 +1,470 @@
+{
+  "info": {
+    "_postman_id": "c69df7d1-bcc1-4d56-849e-e8ca44c08df3",
+    "name": "Student-Management-API updated",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46893859",
+    "_collection_link": "https://go.postman.co/collection/46893859-c69df7d1-bcc1-4d56-849e-e8ca44c08df3?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Folder stucture (Auth)",
+      "item": [
+        {
+          "name": "Register User Request",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/register",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User Request",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "pm.environment.set(\"accessToken\", response.accessToken);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/login",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/logout",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token Request",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/refresh-token",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"oldPassword\": \"123456\",\r\n  \"newPassword\": \"1234567\",\r\n  \"confirmPassword\": \"1234567\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/change-password",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password Request",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"test@example.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/forgot-password",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password Request",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"newPassword\": \"123456\",\r\n  \"confirmPassword\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/auth/reset-password/abc123token",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password",
+                "abc123token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Folder stucture (Student)",
+      "item": [
+        {
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Rahul Kumar\",\r\n  \"email\": \"rahul@example.com\",\r\n  \"phone\": \"9876543210\",\r\n  \"age\": 22,\r\n  \"course\": \"MERN Stack Backend\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/student",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "student"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Students (pagination + search)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/student/?page=1&limit=2",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "student",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Student",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/student/69d240198122d3557b00486c",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "student",
+                "69d240198122d3557b00486c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Student (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Rahul Updated\",\r\n  \"phone\": \"9999999999\",\r\n  \"age\": 23,\r\n  \"course\": \"Node.js\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/student/69d240198122d3557b00486c",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "student",
+                "69d240198122d3557b00486c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Student (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"course\": \"Java Backend\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/student/69d240198122d3557b00486c",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "student",
+                "69d240198122d3557b00486c"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Student (Soft Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "https://student-api-zia3.onrender.com/api/student/69d240198122d3557b00486c",
+              "protocol": "https",
+              "host": [
+                "student-api-zia3",
+                "onrender",
+                "com"
+              ],
+              "path": [
+                "api",
+                "student",
+                "69d240198122d3557b00486c"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
