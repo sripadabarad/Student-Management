@@ -17,6 +17,7 @@ const authorization = require("../middleware/authorization");
 
 // STUDENT VALIDATION
 const {
+    idValidation,
     createStudentValidation,
     updateStudentPUTValidator,
     updateStudentPATCHValidation
@@ -39,6 +40,7 @@ router.post("/",
 router.put("/:id",
     authentication,
     authorization("admin"),
+    idValidation,
     updateStudentPUTValidator,
     validateRequest,
     updateStudentPUT
@@ -48,6 +50,7 @@ router.put("/:id",
 router.patch("/:id",
     authentication,
     authorization("admin"),
+    idValidation,
     updateStudentPATCHValidation,
     validateRequest,
     updateStudentPATCH
@@ -57,6 +60,8 @@ router.patch("/:id",
 router.delete("/:id",
     authentication,
     authorization("admin"),
+    idValidation,
+    validateRequest,
     deleteStudent
 );
 
@@ -73,6 +78,8 @@ router.get("/",
 router.get("/:id",
     authentication,
     authorization("admin","teacher","user"),
+    idValidation,
+    validateRequest,
     getSingleStudent);
 
 module.exports = router;

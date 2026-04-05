@@ -1,9 +1,21 @@
 const {body} = require("express-validator");
+const {param} = require("express-validator");
+
+
+// ================= ID VALIDATION =================
+
+const idValidation = [
+    param("id")
+    .trim()
+    .notEmpty().withMessage("ID is required")
+    .isMongoId().withMessage("Invalid MongoDB ID")
+];
 
 // ================= CREATE =================
 
 const createStudentValidation = [
     body("name")
+    .trim()
     .notEmpty().withMessage("Name is required")
     .isLength({ min: 3, max: 50 }).withMessage("Name must be 3-50 characters"),
 
@@ -14,7 +26,7 @@ const createStudentValidation = [
 
     body("phone")
     .notEmpty().withMessage("Phone number is required")
-    .isMobilePhone().withMessage("Invalid phone number"),
+    .isMobilePhone("en-IN").withMessage("Invalid phone number"),
 
     body("age")
     .notEmpty().withMessage("Age is required")
@@ -87,6 +99,7 @@ const updateStudentPATCHValidation = [
 ];
 
 module.exports = {
+    idValidation,
     createStudentValidation,
     updateStudentPUTValidator,
     updateStudentPATCHValidation
