@@ -4,7 +4,26 @@ A backend project built with Node.js, Express, and MongoDB to manage student dat
 
 This project focuses on writing clean, structured backend code and implementing real-world concepts like JWT authentication, RBAC, pagination, filtering, and soft delete.
 
+# Live API
+Base URL:https://student-api-zia3.onrender.com
 
+ # Key Features
+1. JWT Authentication (Access + Refresh Tokens)
+2. Role-Based Access Control (Admin / Teacher / User)
+3. Complete Student CRUD Operations
+4. Soft Delete (data not permanently removed)
+5. Search & Filtering
+6. Pagination for large datasets
+7. Email system using SendGrid
+8. Clean Architecture (MVC + Service Layer)
+
+## Tech Stack :--
+Backend: Node.js, Express.js
+Database: MongoDB + Mongoose
+Auth: JWT (Access + Refresh Token)
+Architecture: MVC + Service Layer
+Email Service: SendGrid
+Security: RBAC (Role-Based Access Control)
 
 ## What this project does:----
 1. Users can log in and get a JWT token
@@ -12,14 +31,6 @@ This project focuses on writing clean, structured backend code and implementing 
 3. Students can be created, updated, fetched, and deleted
 4. Deleted data is not removed permanently (soft delete used)
 5. Supports pagination and search for handling large data
-
-
-## Tech Stack :--
-Backend: Node.js, Express.js
-Database: MongoDB (Mongoose)
-Security: JWT Authentication
-Architecture: MVC + Service Layer
-
 
 ## Project Structure :--
 The project follows a clean structure with separation of logic:
@@ -29,7 +40,6 @@ Clear separation of concerns ensures:
 Better scalability
 Easier debugging
 Production-level code structure
-
 
 
 ## Authentication & Authorization :--
@@ -104,6 +114,18 @@ JWT_REFRESH_TOKEN=your_refresh_token_secret
 SENDGRID_API_KEY=your_sendgrid_api_key
 EMAIL_FROM=your_email_address
 
+# Postman Testing
+
+All APIs are tested using Postman:
+
+JWT authentication enabled
+Role-based access tested
+Full CRUD verification done
+
+👉 Import collection:
+Student-Management.postman_collection.json
+Student-Management.postman_environment.json
+
 
 
  # Run Locally :--
@@ -117,9 +139,11 @@ npm start
 
 All APIs are tested using Postman with proper authentication and role-based access control.
 
-# Status :--
+# Deployment Status :--
 
-Deployment in progress.
+Backend deployed on cloud platform (Render / Railway / etc.)
+Auto deployment enabled via GitHub integration
+Environment variables configured in production
 
 
 # What Makes This Project Stand Out?
@@ -131,8 +155,8 @@ Deployment in progress.
 
 # Author :-
 
-sripada barad
-Backend Developer
+Sripada Barad
+Backend Developer (Node.js)
 
 # Note :--
 
