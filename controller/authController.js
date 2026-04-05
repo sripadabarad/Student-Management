@@ -34,6 +34,7 @@ const register = asyncHandler(async (req, res) => {
             role: user.role,
         },
         accessToken,
+
     });
 });
 
@@ -64,7 +65,8 @@ const login = asyncHandler(async (req, res) => {
             email: user.email,
             role: user.role
         },
-        accessToken
+        accessToken,
+        refreshToken
     });
 
 });
