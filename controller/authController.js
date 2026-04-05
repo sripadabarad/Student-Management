@@ -131,12 +131,13 @@ const changePassword = asyncHandler(async (req, res) => {
 
     const userId = req.user.id;
 
-    const {oldPassword , newPassword} = req.body;
+    const {oldPassword , newPassword ,confirmPassword} = req.body;
 
     await authService.changePassword({ 
         userId, 
         oldPassword , 
-        newPassword
+        newPassword,
+        confirmPassword
     });
 
     res.clearCookie("refreshToken", {
