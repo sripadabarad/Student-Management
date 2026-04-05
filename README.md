@@ -141,7 +141,7 @@ All APIs are tested using Postman with proper authentication and role-based acce
 
 # Deployment Status :--
 
-Backend deployed on cloud platform (Render / Railway / etc.)
+Backend deployed on cloud platform (Render).
 Auto deployment enabled via GitHub integration
 Environment variables configured in production
 
