@@ -134,8 +134,8 @@ const changePassword = asyncHandler(async (req, res) => {
     const {oldPassword , newPassword ,confirmPassword} = req.body;
 
     await authService.changePassword({ 
-        userId, 
-        oldPassword , 
+        userId}, 
+        {oldPassword , 
         newPassword,
         confirmPassword
     });
